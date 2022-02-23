@@ -1,2 +1,2 @@
-# Multiplayer_PEC1
-Project of course Multiplayer games PEC1
+# m1-sol
+B2.503 Module 1 Solution Project
