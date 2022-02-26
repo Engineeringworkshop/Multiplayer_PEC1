@@ -1,6 +1,7 @@
 ﻿using Cinemachine;
 using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Complete
 {
@@ -26,12 +27,22 @@ namespace Complete
 
         [HideInInspector] public GameManager m_GameManager;
 
+        [HideInInspector] public PlayerInput m_PlayerInput;
+
+        private void Update()
+        {
+            //Debug.Log(m_PlayerInput.currentControlScheme);
+            //Debug.Log(InputSystem.devices[0]);
+            //m_PlayerInput.SwitchCurrentControlScheme("Keyboard_2");
+        }
+
         public void Setup ()
         {
             // Get references to the components
             m_Movement = m_Instance.GetComponent<TankMovement>();
             m_Shooting = m_Instance.GetComponent<TankShooting>();
             m_CanvasGameObject = m_Instance.GetComponentInChildren<Canvas>().gameObject;
+            m_PlayerInput = m_Instance.GetComponent<PlayerInput>();
 
             // Set the player numbers to be consistent across the scripts
             m_Movement.m_PlayerNumber = m_PlayerNumber;

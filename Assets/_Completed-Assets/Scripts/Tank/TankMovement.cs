@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Complete
 {
@@ -20,6 +21,7 @@ namespace Complete
         private float m_TurnInputValue;             // The current value of the turn input
         private float m_OriginalPitch;              // The pitch of the audio source at the start of the scene
 
+        private Vector2 m_movementInput = Vector2.zero;
 
         private void Awake()
         {
@@ -58,10 +60,6 @@ namespace Complete
 
         private void Update ()
         {
-            // Store the value of both input axes
-            m_MovementInputValue = Input.GetAxis (m_MovementAxisName);
-            m_TurnInputValue = Input.GetAxis (m_TurnAxisName);
-
             EngineAudio();
         }
 
@@ -101,6 +99,11 @@ namespace Complete
             Turn();
         }
 
+        public void OnMove(InputAction.CallbackContext context)
+        {
+            m_MovementInputValue = context.ReadValue<Vector2>().y;
+            m_TurnInputValue = context.ReadValue<Vector2>().x;
+        }
 
         private void Move()
         {

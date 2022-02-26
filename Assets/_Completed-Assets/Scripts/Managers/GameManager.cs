@@ -2,6 +2,7 @@ using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -15,6 +16,8 @@ namespace Complete
         public float m_EndDelay = 3f;               // The delay between the end of RoundPlaying and RoundEnding phases   
         public Text m_MessageText;                  // Reference to the overlay Text to display winning text, etc.
         public GameObject m_TankPrefab;             // Reference to the prefab the players will control
+
+        public int m_MaxPlayers = 4;
 
         public Color[] m_Colors; // Array with the colours for the tanks
         public Transform[] m_SpawnPoints; // Array with the spawnpoint of the game
@@ -71,7 +74,6 @@ namespace Complete
         {
 
             SpawnAllTanks();
-            //SetCameraTargets();
 
             // Once the tanks have been created and the camera is using them as targets, start the game
             StartCoroutine(GameLoop());
@@ -86,26 +88,97 @@ namespace Complete
             // For all the tanks...
             for (int i = 0; i < numberOfPlayers; i++)
 			{
-                // ... create them, set their player number and references needed for control
-                var newTank = Instantiate (m_TankPrefab, m_SpawnPoints[i].position, m_SpawnPoints[i].rotation);
-                
-                TankManager tankManager = newTank.GetComponent<TankManager>();
-
-                tankManager.m_Instance = newTank;
-                tankManager.m_PlayerNumber = i + 1;
-                tankManager.m_PlayerColor = m_Colors[i];
-                tankManager.m_SpawnPoint = m_SpawnPoints[i];
-                tankManager.m_GameManager = this;
-                tankManager.m_Camera = m_VirtualCameras[i];
-                tankManager.m_Camera.Follow = newTank.transform;
-                tankManager.m_Camera.LookAt = newTank.transform;
-                tankManager.Setup();
-
-                m_TankPlaying.Add(newTank);
+                SpawnTank(i);
             }
 
             mainCam.gameObject.SetActive (false);
 		}
+
+        public void SpawnNewTank()
+        {
+            if (numberOfPlayers < m_MaxPlayers)
+            {
+                Debug.Log("New tank joined");
+
+                //SpawnTank(numberOfPlayers);
+
+                numberOfPlayers++;
+
+                camControl.ChangeCameraLayout(numberOfPlayers);
+            }
+        }
+
+        public void SpawnTank(int i)
+        {
+            // ... create them, set their player number and references needed for control
+            var newTank = Instantiate(m_TankPrefab, m_SpawnPoints[i].position, m_SpawnPoints[i].rotation);
+
+            TankManager tankManager = newTank.GetComponent<TankManager>();
+
+            tankManager.m_Instance = newTank;
+            tankManager.m_PlayerNumber = i + 1;
+            tankManager.m_PlayerColor = m_Colors[i];
+            tankManager.m_SpawnPoint = m_SpawnPoints[i];
+            tankManager.m_GameManager = this;
+            tankManager.m_Camera = m_VirtualCameras[i];
+            tankManager.m_Camera.Follow = newTank.transform;
+            tankManager.m_Camera.LookAt = newTank.transform;
+            tankManager.Setup();
+
+            // Set controll scheme
+            //SetControlScheme(i, tankManager.m_PlayerInput);
+
+            m_TankPlaying.Add(newTank);
+        }
+
+        private void SetControllers()
+        {
+            int i = 0;
+
+            foreach (var tank in m_TankPlaying)
+            {
+                TankManager tankManager = tank.GetComponent<TankManager>();
+                SetControlScheme(i, tankManager.m_PlayerInput);
+                i++;
+            }
+        }
+
+        private void SetControlScheme(int i, PlayerInput playerInput)
+        {
+            playerInput.neverAutoSwitchControlSchemes = true;
+
+            if (i == 0)
+            {
+                playerInput.SwitchCurrentControlScheme("Keyboard_1", Keyboard.current);
+            }
+            else if (i == 1)
+            {
+                playerInput.SwitchCurrentControlScheme("Keyboard_2", Keyboard.current);
+            }
+            else if (i == 2)
+            {
+                if (InputSystem.devices.Count >= 3)
+                {
+                    playerInput.SwitchCurrentControlScheme("Controller", Gamepad.all[0]);
+                }
+                else
+                {
+                    Debug.LogError("Controller is not connected");
+                }
+                
+            }
+            else if (i == 3)
+            {
+                if (InputSystem.devices.Count >= 4)
+                {
+                    playerInput.SwitchCurrentControlScheme("Controller", Gamepad.all[1]);
+                }
+                else
+                {
+                    Debug.LogError("Controller is not connected");
+                }
+            }
+        }
 
         // This is called from start and will run each phase of the game one after another
         private IEnumerator GameLoop()
@@ -139,6 +212,9 @@ namespace Complete
             // As soon as the round starts reset the tanks and make sure they can't move
             ResetAllTanks();
             DisableTankControl();
+
+            // Set controllers
+            SetControllers();
 
             // Reset all cameras to the players number
             SetCameraOnActiveTanks();
