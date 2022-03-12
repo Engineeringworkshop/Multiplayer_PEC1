@@ -18,6 +18,8 @@ namespace Complete
         private float m_CurrentHealth;                      // How much health the tank currently has
         private bool m_Dead;                                // Has the tank been reduced beyond zero health yet?
 
+        private TankManager m_tankManager;                  //Reference to tank manager
+
         private void Awake()
         {
             // Instantiate the explosion prefab and get a reference to the particle system on it
@@ -26,12 +28,25 @@ namespace Complete
             // Get a reference to the audio source on the instantiated prefab
             m_ExplosionAudio = m_ExplosionParticles.GetComponent<AudioSource>();
 
+            // Get reference to tank manager
+            m_tankManager = GetComponent<TankManager>();
+
             // Disable the prefab so it can be activated when it's required
             m_ExplosionParticles.gameObject.SetActive (false);
         }
 
 
         private void OnEnable()
+        {
+            // When the tank is enabled, reset the tank's health and whether or not it's dead
+            m_CurrentHealth = m_StartingHealth;
+            m_Dead = false;
+
+            // Update the health slider's value and color
+            SetHealthUI();
+        }
+
+        public void ResetHealth()
         {
             // When the tank is enabled, reset the tank's health and whether or not it's dead
             m_CurrentHealth = m_StartingHealth;
@@ -82,10 +97,10 @@ namespace Complete
             m_ExplosionAudio.Play();
 
             // Turn the tank off
-            gameObject.SetActive (false);
+            m_tankManager.DisableTank();
 
             // Tell the game manager this tank is defeated
-            GetComponent<TankManager>().m_GameManager.TankDefeated();
+            m_tankManager.m_GameManager.TankDefeated();
         }
     }
 }

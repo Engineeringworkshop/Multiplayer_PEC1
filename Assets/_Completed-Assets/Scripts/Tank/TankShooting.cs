@@ -92,7 +92,7 @@ namespace Complete
             // If the max force has been exceeded and the shell hasn't yet been launched...
             if (m_CurrentLaunchForce >= m_MaxLaunchForce && !m_Fired)
             {
-                Debug.Log("Fire by max");
+                //Debug.Log("Fire by max");
                 // ... use the max force and launch the shell
                 m_CurrentLaunchForce = m_MaxLaunchForce;
                 Fire();
@@ -100,7 +100,7 @@ namespace Complete
             // Otherwise, if the fire button has just started being pressed...
             else if ((m_FirePushed || m_AltFirePushed) && !m_ChargingFire)
             {
-                Debug.Log("start charging");
+                //Debug.Log("start charging");
                 // ... reset the fired flag and reset the launch force
                 m_Fired = false;
                 m_CurrentLaunchForce = m_MinLaunchForce;
@@ -114,7 +114,7 @@ namespace Complete
             // Otherwise, if the fire button is being held and the shell hasn't been launched yet...
             else if ((m_FirePushed || m_AltFirePushed) && m_ChargingFire && !m_Fired)
             {
-                Debug.Log("charging");
+                //Debug.Log("charging");
                 // Increment the launch force and update the slider
                 m_CurrentLaunchForce += m_ChargeSpeed * Time.deltaTime;
 
@@ -123,7 +123,7 @@ namespace Complete
             // Otherwise, if the fire button is released and the shell hasn't been launched yet...
             else if ((!m_FirePushed || !m_AltFirePushed) && !m_ChargingFire && !m_Fired)
             {
-                Debug.Log("Fire");
+                //Debug.Log("Fire");
                 // ... launch the shell
                 Fire();
             }

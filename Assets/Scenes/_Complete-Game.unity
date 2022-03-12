@@ -930,7 +930,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 663460549}
-  m_LocalRotation: {x: 0.33395642, y: -0.23001462, z: 0.44581065, w: 0.7980096}
+  m_LocalRotation: {x: 0.33395645, y: -0.23001455, z: 0.4458105, w: 0.7980097}
   m_LocalPosition: {x: 8.700006, y: 92.600006, z: -84.200005}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -1113,7 +1113,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 711737513}
-  m_LocalRotation: {x: 0.33395642, y: -0.23001462, z: 0.44581065, w: 0.7980096}
+  m_LocalRotation: {x: 0.33395645, y: -0.23001455, z: 0.4458105, w: 0.7980097}
   m_LocalPosition: {x: 8.700006, y: 92.600006, z: -84.200005}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -2153,6 +2153,7 @@ GameObject:
   - component: {fileID: 1304999367}
   - component: {fileID: 1304999368}
   - component: {fileID: 1304999369}
+  - component: {fileID: 1304999370}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -2193,6 +2194,7 @@ MonoBehaviour:
   - {fileID: 692227495}
   - {fileID: 284310521}
   - {fileID: 95079061}
+  playerInputManager: {fileID: 0}
   m_TankPlaying: []
   startMenuObject: {fileID: 1743507182}
 --- !u!4 &1304999366
@@ -2321,7 +2323,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1304999364}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 621567455fd1c4ceb811cc8a00b6a1a5, type: 3}
   m_Name: 
@@ -2329,25 +2331,46 @@ MonoBehaviour:
   m_NotificationBehavior: 2
   m_MaxPlayerCount: 4
   m_AllowJoining: 1
-  m_JoinBehavior: 0
+  m_JoinBehavior: 1
   m_PlayerJoinedEvent:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1304999370}
+        m_TargetAssemblyTypeName: PlayerManager, Assembly-CSharp
+        m_MethodName: OnPlayerJoined
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_PlayerLeftEvent:
     m_PersistentCalls:
       m_Calls: []
   m_JoinAction:
-    m_UseReference: 0
+    m_UseReference: 1
     m_Action:
-      m_Name: 
+      m_Name: Join
       m_Type: 0
       m_ExpectedControlType: 
-      m_Id: 
+      m_Id: 8608155b-9998-4e3c-b716-67103a143f7f
       m_Processors: 
       m_Interactions: 
-      m_SingletonActionBindings: []
+      m_SingletonActionBindings:
+      - m_Name: 
+        m_Id: 707397dc-c118-4e92-90d4-0fba36a1f5e2
+        m_Path: 
+        m_Interactions: 
+        m_Processors: 
+        m_Groups: 
+        m_Action: Join
+        m_Flags: 0
       m_Flags: 0
-    m_Reference: {fileID: 0}
+    m_Reference: {fileID: 7429445904110368192, guid: 950403639d2acf64795d47dd841a5767,
+      type: 3}
   m_PlayerPrefab: {fileID: 173472, guid: 756d3a6506f2f8241b4e8badde68567a, type: 3}
   m_SplitScreen: 0
   m_MaintainAspectRatioInSplitScreen: 0
@@ -2358,6 +2381,37 @@ MonoBehaviour:
     y: 0
     width: 1
     height: 1
+--- !u!114 &1304999370
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1304999364}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2782126d99533d4fb2aa5bc002cc427, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  camControl: {fileID: 1771596989}
+  gameManager: {fileID: 1304999365}
+  m_MaxPlayers: 4
+  m_Colors:
+  - {r: 0.12698466, g: 0.27677968, b: 0.7735849, a: 0}
+  - {r: 0.6415094, g: 0.13556422, b: 0.13556422, a: 0}
+  - {r: 0.1608396, g: 0.5660378, b: 0.11427554, a: 0}
+  - {r: 0.47993022, g: 0.12951227, b: 0.6415094, a: 0}
+  m_SpawnPoints:
+  - {fileID: 194018016}
+  - {fileID: 2083660209}
+  - {fileID: 598067143}
+  - {fileID: 2128855311}
+  m_VirtualCameras:
+  - {fileID: 1665103458}
+  - {fileID: 692227495}
+  - {fileID: 284310521}
+  - {fileID: 95079061}
+  m_TankPlaying: []
 --- !u!1 &1391056259
 GameObject:
   m_ObjectHideFlags: 0

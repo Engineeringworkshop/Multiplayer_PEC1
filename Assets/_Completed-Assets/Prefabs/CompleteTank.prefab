@@ -10591,6 +10591,7 @@ MonoBehaviour:
   m_Instance: {fileID: 0}
   m_Wins: 0
   m_Camera: {fileID: 0}
+  m_TankRenders: {fileID: 151450}
   m_GameManager: {fileID: 0}
   m_PlayerInput: {fileID: 0}
 --- !u!114 &11443146
@@ -10727,6 +10728,10 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: bbe8f202-c893-4e8b-a73e-30df31377dbb
     m_ActionName: Gameplay/AltFire[/Keyboard/e,/Keyboard/rightCtrl,/XInputControllerWindows/buttonEast]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: b904d44c-1abd-4479-af39-9ef1166a36f2
+    m_ActionName: Gameplay/Join[/Keyboard/backspace,/Keyboard/tab,/XInputControllerWindows/select,/XInputControllerWindows1/select]
   m_NeverAutoSwitchControlSchemes: 1
   m_DefaultControlScheme: Keyboard_1
   m_DefaultActionMap: Gameplay

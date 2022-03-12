@@ -37,10 +37,10 @@ public class CameraControlCinemachine : MonoBehaviour
         EnableCamera(camera2);
         camera2.rect = new Rect(0.11f, 0.0f, 0.89f, 0.5f);
 
-        DisableCamera(mainCamera);
-        DisableCamera(camera3);
-        DisableCamera(camera4);
-        DisableCamera(cameraMiniMap);
+        DisableCamera2(mainCamera);
+        DisableCamera2(camera3);
+        DisableCamera2(camera4);
+        DisableCamera2(cameraMiniMap);
         
     }
 
@@ -55,8 +55,8 @@ public class CameraControlCinemachine : MonoBehaviour
         EnableCamera(cameraMiniMap);
         cameraMiniMap.rect = new Rect(0.5f, 0.0f, 0.5f, 0.5f);
 
-        DisableCamera(mainCamera);
-        DisableCamera(camera4);
+        DisableCamera2(mainCamera);
+        DisableCamera2(camera4);
     }
 
     private void FourPlayers()
@@ -70,8 +70,8 @@ public class CameraControlCinemachine : MonoBehaviour
         EnableCamera(camera4);
         camera4.rect = new Rect(0.5f, 0.0f, 0.5f, 0.5f);
 
-        DisableCamera(mainCamera);
-        DisableCamera(cameraMiniMap);
+        DisableCamera2(mainCamera);
+        DisableCamera2(cameraMiniMap);
     }
 
     //method to disable a camera
@@ -85,6 +85,12 @@ public class CameraControlCinemachine : MonoBehaviour
     {
         cam.gameObject.SetActive(true);
     }
+
+    private void DisableCamera2(Camera cam)
+    {
+        cam.gameObject.SetActive(false);
+    }
+
 
     // Method to disable camera on next update
     private IEnumerator DisableCameraCoroutine(Camera cam)

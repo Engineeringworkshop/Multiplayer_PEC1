@@ -24,17 +24,18 @@ namespace Complete
         private TankMovement m_Movement;                        // Reference to tank's movement script, used to disable and enable control
         private TankShooting m_Shooting;                        // Reference to tank's shooting script, used to disable and enable control
         private GameObject m_CanvasGameObject;                  // Used to disable the world space UI during the Starting and Ending phases of each round
+        private Rigidbody m_rigidBody;
+        private BoxCollider m_boxCollider;
+
+        private TankHealth m_tankHealth;
+
+        [SerializeField] private GameObject m_TankRenders;
 
         [HideInInspector] public GameManager m_GameManager;
 
         [HideInInspector] public PlayerInput m_PlayerInput;
 
-        private void Update()
-        {
-            //Debug.Log(m_PlayerInput.currentControlScheme);
-            //Debug.Log(InputSystem.devices[0]);
-            //m_PlayerInput.SwitchCurrentControlScheme("Keyboard_2");
-        }
+        public bool isActive;
 
         public void Setup ()
         {
@@ -43,6 +44,10 @@ namespace Complete
             m_Shooting = m_Instance.GetComponent<TankShooting>();
             m_CanvasGameObject = m_Instance.GetComponentInChildren<Canvas>().gameObject;
             m_PlayerInput = m_Instance.GetComponent<PlayerInput>();
+            m_rigidBody = m_Instance.GetComponent<Rigidbody>();
+            m_boxCollider = m_Instance.GetComponent<BoxCollider>();
+
+            m_tankHealth = m_Instance.GetComponent<TankHealth>();
 
             // Set the player numbers to be consistent across the scripts
             m_Movement.m_PlayerNumber = m_PlayerNumber;
@@ -60,6 +65,8 @@ namespace Complete
                 // ... set their material color to the color specific to this tank
                 renderers[i].material.color = m_PlayerColor;
             }
+
+            isActive = true;
         }
 
 
@@ -89,8 +96,37 @@ namespace Complete
             m_Instance.transform.position = m_SpawnPoint.position;
             m_Instance.transform.rotation = m_SpawnPoint.rotation;
 
-            m_Instance.SetActive (false);
-            m_Instance.SetActive (true);
+            EnableTank();
+
+            m_tankHealth.ResetHealth();
+        }
+
+        // Method to disable components that interacts with game
+        public void DisableTank()
+        {
+            m_Movement.enabled = false;     // Disable movement script
+            m_Shooting.enabled = false;       // Disable shoting script
+            m_rigidBody.isKinematic = true; // Set rigidbody to kinematic to disable physics update
+            m_boxCollider.enabled = false; // set box collider off
+            m_TankRenders.SetActive(false); // set tank renders off
+
+            m_CanvasGameObject.SetActive(false);
+
+            isActive = false;
+        }
+
+        // Method to enable components that interacts with game
+        private void EnableTank()
+        {
+            m_Movement.enabled = true;     // Enable movement script
+            m_Shooting.enabled = true;       // Enable shoting script
+            m_rigidBody.isKinematic = false; // Set rigidbody to no kinematic to enable physics update
+            m_boxCollider.enabled = true; // set box collider on
+            m_TankRenders.SetActive(true); // set tank renders on
+
+            m_CanvasGameObject.SetActive(true);
+
+            isActive = true;
         }
     }
 }

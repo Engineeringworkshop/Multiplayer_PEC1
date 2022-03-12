@@ -23,10 +23,10 @@ namespace Complete
         public Transform[] m_SpawnPoints; // Array with the spawnpoint of the game
         public CinemachineVirtualCamera[] m_VirtualCameras; // Array of the scene cameras
 
-        public List<GameObject> m_TankPlaying; // List of tanks currently playing
+        //public List<GameObject> m_TankPlaying; // List of tanks currently playing
 
         [Header("Start Menu configuration")]
-        public GameObject startMenuObject;           
+        public GameObject startMenuObject;
 
         private int m_RoundNumber;                  // Which round the game is currently on
         private WaitForSeconds m_StartWait;         // Used to have a delay whilst the round starts
@@ -34,9 +34,9 @@ namespace Complete
         private TankManager m_RoundWinner;          // Reference to the winner of the current round.  Used to make an announcement of who won
         private TankManager m_GameWinner;           // Reference to the winner of the game.  Used to make an announcement of who won
 
+        [Header("Component references")]
         private CameraControlCinemachine camControl;// Reference to the CameraControlCinemachine script for control during different phases
-
-        private int numberOfPlayers;
+        private PlayerManager playerManager;
 
         private void OnValidate()
         {
@@ -52,19 +52,23 @@ namespace Complete
             m_StartWait = new WaitForSeconds (m_StartDelay);
             m_EndWait = new WaitForSeconds (m_EndDelay);
 
+            // Set component references
+            playerManager = GetComponent<PlayerManager>();
+
             // Activate start menu
             startMenuObject.SetActive(true);
         }
 
+        // Method to manage input on numer of player screen
         public void StartGameWithNumberOfPlayerGame(int num)
         {
-            numberOfPlayers = num;
+            playerManager.numberOfInitialPlayers = num;
 
             startMenuObject.SetActive(false);
 
             camControl.ChangeCameraLayout(num);
 
-            Debug.Log("Juego iniciado con " + numberOfPlayers + " jugadores.");
+            Debug.Log("Juego iniciado con " + playerManager.numberOfInitialPlayers + " jugadores.");
 
             StartGame();
         }
@@ -72,113 +76,13 @@ namespace Complete
         // Method to manage start game a fter selectin number of players
         private void StartGame()
         {
-
-            SpawnAllTanks();
+            // Spawn initial tanks on playground
+            playerManager.SpawnInitialTanks();
 
             // Once the tanks have been created and the camera is using them as targets, start the game
             StartCoroutine(GameLoop());
         }
-		
-		private void SpawnAllTanks()
-		{
-			Camera mainCam = GameObject.Find ("Main Camera").GetComponent<Camera>();
 
-            m_TankPlaying.Clear();
-
-            // For all the tanks...
-            for (int i = 0; i < numberOfPlayers; i++)
-			{
-                SpawnTank(i);
-            }
-
-            mainCam.gameObject.SetActive (false);
-		}
-
-        public void SpawnNewTank()
-        {
-            if (numberOfPlayers < m_MaxPlayers)
-            {
-                Debug.Log("New tank joined");
-
-                //SpawnTank(numberOfPlayers);
-
-                numberOfPlayers++;
-
-                camControl.ChangeCameraLayout(numberOfPlayers);
-            }
-        }
-
-        public void SpawnTank(int i)
-        {
-            // ... create them, set their player number and references needed for control
-            var newTank = Instantiate(m_TankPrefab, m_SpawnPoints[i].position, m_SpawnPoints[i].rotation);
-
-            TankManager tankManager = newTank.GetComponent<TankManager>();
-
-            tankManager.m_Instance = newTank;
-            tankManager.m_PlayerNumber = i + 1;
-            tankManager.m_PlayerColor = m_Colors[i];
-            tankManager.m_SpawnPoint = m_SpawnPoints[i];
-            tankManager.m_GameManager = this;
-            tankManager.m_Camera = m_VirtualCameras[i];
-            tankManager.m_Camera.Follow = newTank.transform;
-            tankManager.m_Camera.LookAt = newTank.transform;
-            tankManager.Setup();
-
-            // Set controll scheme
-            //SetControlScheme(i, tankManager.m_PlayerInput);
-
-            m_TankPlaying.Add(newTank);
-        }
-
-        private void SetControllers()
-        {
-            int i = 0;
-
-            foreach (var tank in m_TankPlaying)
-            {
-                TankManager tankManager = tank.GetComponent<TankManager>();
-                SetControlScheme(i, tankManager.m_PlayerInput);
-                i++;
-            }
-        }
-
-        private void SetControlScheme(int i, PlayerInput playerInput)
-        {
-            playerInput.neverAutoSwitchControlSchemes = true;
-
-            if (i == 0)
-            {
-                playerInput.SwitchCurrentControlScheme("Keyboard_1", Keyboard.current);
-            }
-            else if (i == 1)
-            {
-                playerInput.SwitchCurrentControlScheme("Keyboard_2", Keyboard.current);
-            }
-            else if (i == 2)
-            {
-                if (InputSystem.devices.Count >= 3)
-                {
-                    playerInput.SwitchCurrentControlScheme("Controller", Gamepad.all[0]);
-                }
-                else
-                {
-                    Debug.LogError("Controller is not connected");
-                }
-                
-            }
-            else if (i == 3)
-            {
-                if (InputSystem.devices.Count >= 4)
-                {
-                    playerInput.SwitchCurrentControlScheme("Controller", Gamepad.all[1]);
-                }
-                else
-                {
-                    Debug.LogError("Controller is not connected");
-                }
-            }
-        }
 
         // This is called from start and will run each phase of the game one after another
         private IEnumerator GameLoop()
@@ -212,9 +116,6 @@ namespace Complete
             // As soon as the round starts reset the tanks and make sure they can't move
             ResetAllTanks();
             DisableTankControl();
-
-            // Set controllers
-            SetControllers();
 
             // Reset all cameras to the players number
             SetCameraOnActiveTanks();
@@ -279,10 +180,10 @@ namespace Complete
             int numTanksLeft = 0;
 
             // Go through all the tanks...
-            foreach (var tank in m_TankPlaying)
+            foreach (var tank in playerManager.m_TankPlaying)
             {
                 // ... and if they are active, increment the counter
-                if (tank.activeSelf)
+                if (tank.GetComponent<TankManager>().isActive)
                 {
                     numTanksLeft++;
                 }
@@ -296,12 +197,14 @@ namespace Complete
         private void SetCameraOnActiveTanks()
         {
             int i = 0;
-            // Asign cam to active tank
-            foreach (var tank in m_TankPlaying)
+            // Re-asign cameras to actives tanks
+            foreach (var tank in playerManager.m_TankPlaying)
             {
-                if (tank.activeSelf)
+                var tankManager = tank.GetComponent<TankManager>();
+
+                if (tankManager.isActive)
                 {
-                    SetCamera(tank.GetComponent<TankManager>(), i);
+                    SetCamera(tankManager, i);
                     i++;
                 }
             }
@@ -322,12 +225,14 @@ namespace Complete
         private TankManager GetRoundWinner()
         {
             // Go through all the tanks...
-            foreach (var tank in m_TankPlaying)
+            foreach (var tank in playerManager.m_TankPlaying)
             {
+                var tankManager = tank.GetComponent<TankManager>();
+
                 // ... and if one of them is active, it is the winner so return it
-                if (tank.activeSelf)
+                if (tankManager.isActive)
                 {
-                    return tank.GetComponent<TankManager>();
+                    return tankManager;
                 }
             }
             // If none of the tanks are active it is a draw so return null
@@ -339,7 +244,7 @@ namespace Complete
         private TankManager GetGameWinner()
         {
             // Go through all the tanks...
-            foreach (var tank in m_TankPlaying)
+            foreach (var tank in playerManager.m_TankPlaying)
             {
                 TankManager tantManager = tank.GetComponent<TankManager>();
                 // ... and if one of them has enough rounds to win the game, return it
@@ -369,7 +274,7 @@ namespace Complete
             message += "\n\n\n\n";
 
             // Go through all the tanks and add each of their scores to the message
-            foreach (var tank in m_TankPlaying)
+            foreach (var tank in playerManager.m_TankPlaying)
             {
                 TankManager tantManager = tank.GetComponent<TankManager>();
                 message += tantManager.m_ColoredPlayerText + ": " + tantManager.m_Wins + " WINS\n";
@@ -387,7 +292,7 @@ namespace Complete
         // This function is used to turn all the tanks back on and reset their positions and properties
         private void ResetAllTanks()
         {
-            foreach (var tank in m_TankPlaying)
+            foreach (var tank in playerManager.m_TankPlaying)
             {
                 tank.GetComponent<TankManager>().Reset();
             }
@@ -396,7 +301,7 @@ namespace Complete
 
         private void EnableTankControl()
         {
-            foreach (var tank in m_TankPlaying)
+            foreach (var tank in playerManager.m_TankPlaying)
             {
                 tank.GetComponent<TankManager>().EnableControl();
             }
@@ -405,12 +310,13 @@ namespace Complete
 
         private void DisableTankControl()
         {
-            foreach (var tank in m_TankPlaying)
+            foreach (var tank in playerManager.m_TankPlaying)
             {
                 tank.GetComponent<TankManager>().DisableControl();
             }
         }
 
+        // Method to trigger when a tank is defeated.
         public void TankDefeated()
         {
             SetCameraOnActiveTanks();
