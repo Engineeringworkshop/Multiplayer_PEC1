@@ -333,12 +333,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_BindingMode: 1
   m_FollowOffset: {x: 14.260467, y: 11.17537, z: 6.8476415}
-  m_XDamping: 1
-  m_YDamping: 1
-  m_ZDamping: 1
+  m_XDamping: 1.18
+  m_YDamping: 1.18
+  m_ZDamping: 1.19
   m_AngularDampingMode: 0
   m_PitchDamping: 0
-  m_YawDamping: 0
+  m_YawDamping: 2.23
   m_RollDamping: 0
   m_AngularDamping: 0
 --- !u!114 &120351069
@@ -454,12 +454,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_BindingMode: 1
   m_FollowOffset: {x: 14.260467, y: 11.17537, z: 6.8476415}
-  m_XDamping: 1
-  m_YDamping: 1
-  m_ZDamping: 1
+  m_XDamping: 1.18
+  m_YDamping: 1.18
+  m_ZDamping: 1.18
   m_AngularDampingMode: 0
   m_PitchDamping: 0
-  m_YawDamping: 0
+  m_YawDamping: 2.23
   m_RollDamping: 0
   m_AngularDamping: 0
 --- !u!114 &148296343
@@ -758,7 +758,7 @@ MonoBehaviour:
     m_FontStyle: 0
     m_BestFit: 1
     m_MinSize: 10
-    m_MaxSize: 60
+    m_MaxSize: 100
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -1568,8 +1568,8 @@ MonoBehaviour:
     m_Bottom: 0
   m_ChildAlignment: 1
   m_Spacing: 0
-  m_ChildForceExpandWidth: 0
-  m_ChildForceExpandHeight: 0
+  m_ChildForceExpandWidth: 1
+  m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 1
   m_ChildControlHeight: 1
   m_ChildScaleWidth: 0
@@ -1730,12 +1730,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_BindingMode: 1
   m_FollowOffset: {x: 14.260467, y: 11.17537, z: 6.8476415}
-  m_XDamping: 1
-  m_YDamping: 1
-  m_ZDamping: 1
+  m_XDamping: 1.18
+  m_YDamping: 1.18
+  m_ZDamping: 1.18
   m_AngularDampingMode: 0
   m_PitchDamping: 0
-  m_YawDamping: 0
+  m_YawDamping: 2.23
   m_RollDamping: 0
   m_AngularDamping: 0
 --- !u!114 &1174702487
@@ -1886,7 +1886,7 @@ MonoBehaviour:
     m_FontStyle: 0
     m_BestFit: 1
     m_MinSize: 10
-    m_MaxSize: 60
+    m_MaxSize: 100
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -2124,7 +2124,7 @@ MonoBehaviour:
     m_FontStyle: 0
     m_BestFit: 1
     m_MinSize: 10
-    m_MaxSize: 60
+    m_MaxSize: 100
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -2173,7 +2173,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54a000792783c934885973b761b3f96f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_NumRoundsToWin: 5
+  m_NumRoundsToWin: 2
   m_StartDelay: 3
   m_EndDelay: 3
   m_MessageText: {fileID: 102963701}
@@ -2194,8 +2194,6 @@ MonoBehaviour:
   - {fileID: 692227495}
   - {fileID: 284310521}
   - {fileID: 95079061}
-  playerInputManager: {fileID: 0}
-  m_TankPlaying: []
   startMenuObject: {fileID: 1743507182}
 --- !u!4 &1304999366
 Transform:
@@ -2395,6 +2393,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   camControl: {fileID: 1771596989}
   gameManager: {fileID: 1304999365}
+  playerInputManager: {fileID: 0}
   m_MaxPlayers: 4
   m_Colors:
   - {r: 0.12698466, g: 0.27677968, b: 0.7735849, a: 0}
@@ -2412,6 +2411,7 @@ MonoBehaviour:
   - {fileID: 284310521}
   - {fileID: 95079061}
   m_TankPlaying: []
+  numberOfInitialPlayers: 0
 --- !u!1 &1391056259
 GameObject:
   m_ObjectHideFlags: 0
@@ -2666,7 +2666,7 @@ MonoBehaviour:
     m_FontStyle: 0
     m_BestFit: 1
     m_MinSize: 10
-    m_MaxSize: 60
+    m_MaxSize: 100
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -3164,12 +3164,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_BindingMode: 1
   m_FollowOffset: {x: 14.260467, y: 11.17537, z: 6.8476415}
-  m_XDamping: 1
-  m_YDamping: 1
-  m_ZDamping: 1
+  m_XDamping: 1.18
+  m_YDamping: 1.18
+  m_ZDamping: 1.18
   m_AngularDampingMode: 0
   m_PitchDamping: 0
-  m_YawDamping: 0
+  m_YawDamping: 2.23
   m_RollDamping: 0
   m_AngularDamping: 0
 --- !u!114 &1778999770
